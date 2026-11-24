@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; form-action 'self'">
+  <title>Axle load and overload penalty calculator for trucks · Open MSME</title>
+  <meta name="description" content="Work out the permissible gross vehicle weight from a truck's axle configuration, the remaining safe payload before loading, and the Section 194 overload penalty if you cross it. For tipper and truck owners, loaders and dispatchers in India and the Philippines.">
+  <meta name="color-scheme" content="light dark">
+  <meta property="og:title" content="Axle load and overload penalty calculator for trucks · Open MSME">
+  <meta property="og:description" content="Permissible GVW from the axle configuration, remaining safe payload, excess tonnage and the Section 194 fine — before the vehicle leaves the yard.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/accent.css">
+  <script src="assets/theme-init.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="https://sreenivas-sadhu-prabhakara.github.io/openmsme/">
+        <span class="dot"></span><b>Open MSME</b><span class="tag">axle load</span>
+      </a>
+      <span class="sp"></span>
+      <a class="home" href="https://sreenivas-sadhu-prabhakara.github.io/openmsme/">All tools</a>
+      <button class="themer" data-themer type="button">Theme</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow">Logistics &amp; warehousing · India &amp; Philippines</div>
+        <h1>Axle load and overload penalty calculator for trucks</h1>
+        <p class="lede">Build the axle configuration, get the permissible gross vehicle weight, and see how many more tonnes are safe to load — and what the overload costs if you cross it: the fine, the tonnage that has to come off before the vehicle may move, and the insurance claim you put at risk.</p>
+        <div class="who">
+          <span class="pill">Truck and tipper owners</span>
+          <span class="pill">Loaders and dispatchers</span>
+          <span class="pill reg">MV Act s.113 / s.194 · S.O. 3467(E) · RA 8794</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <div class="cols calc">
+        <section class="card">
+          <h2>Inputs</h2>
+
+          <div class="field">
+            <label>Which regime</label>
+            <div class="seg" id="regime-seg">
+              <button type="button" data-regime="IN" aria-pressed="true">India — MV Act</button>
+              <button type="button" data-regime="PH" aria-pressed="false">Philippines — RA 8794</button>
+            </div>
+          </div>
+
+          <div class="field" id="f-preset">
+            <label>Axle configuration <span class="hint">sets the counts below</span></label>
+            <div class="seg" id="preset-seg">
+              <button type="button" data-preset="rigid2" aria-pressed="false">2-axle rigid</button>
+              <button type="button" data-preset="rigid3" aria-pressed="true">3-axle rigid</button>
+              <button type="button" data-preset="rigid4" aria-pressed="false">4-axle rigid</button>
+              <button type="button" data-preset="rigid5" aria-pressed="false">5-axle rigid</button>
+              <button type="button" data-preset="artic4" aria-pressed="false">4-axle tractor</button>
+              <button type="button" data-preset="artic5" aria-pressed="false">5-axle tractor</button>
+              <button type="button" data-preset="artic6" aria-pressed="false">6-axle tractor</button>
+            </div>
+          </div>
+
+          <div class="field" id="f-counts-a">
+            <label>Axle groups on the vehicle <span class="hint">edit any count for a configuration not listed</span></label>
+            <div class="row2">
+              <div class="field">
+                <label for="g-single2">Single axle, two tyres</label>
+                <div class="inp has-suf"><input type="number" id="g-single2" min="0" step="1" value="1" inputmode="numeric"><span class="suf">grp</span></div>
+              </div>
+              <div class="field">
+                <label for="g-single4">Single axle, four tyres</label>
+                <div class="inp has-suf"><input type="number" id="g-single4" min="0" step="1" value="0" inputmode="numeric"><span class="suf">grp</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" id="f-counts-b">
+            <div class="row2">
+              <div class="field">
+                <label for="g-tandem">Tandem groups <span class="hint">2 axles &lt;1.8&nbsp;m</span></label>
+                <div class="inp has-suf"><input type="number" id="g-tandem" min="0" step="1" value="1" inputmode="numeric"><span class="suf">grp</span></div>
+              </div>
+              <div class="field">
+                <label for="g-tridem">Tri-axle groups <span class="hint">3 axles &lt;3&nbsp;m</span></label>
+                <div class="inp has-suf"><input type="number" id="g-tridem" min="0" step="1" value="0" inputmode="numeric"><span class="suf">grp</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" id="f-counts-c">
+            <label for="g-single1">Single axle, one tyre <span class="hint">rare on goods vehicles</span></label>
+            <div class="inp has-suf"><input type="number" id="g-single1" min="0" step="1" value="0" inputmode="numeric"><span class="suf">grp</span></div>
+          </div>
+
+          <div class="field" id="f-class">
+            <label>Body type <span class="hint">sets the gross weight ceiling</span></label>
+            <div class="seg" id="class-seg">
+              <button type="button" data-class="rigid" aria-pressed="true">Rigid</button>
+              <button type="button" data-class="articulated" aria-pressed="false">Tractor-trailer</button>
+              <button type="button" data-class="modularHydraulic" aria-pressed="false">Modular hydraulic</button>
+            </div>
+          </div>
+
+          <div class="field" id="f-susp">
+            <label>Suspension</label>
+            <div class="seg" id="susp-seg">
+              <button type="button" data-susp="steel" aria-pressed="true">Steel / leaf</button>
+              <button type="button" data-susp="pneumatic" aria-pressed="false">Pneumatic (+1 t per axle)</button>
+            </div>
+          </div>
+
+          <h3>Registration and weights</h3>
+
+          <div class="field">
+            <label for="rc-gvw" id="rc-gvw-label">Gross vehicle weight on the RC <span class="hint">leave blank to use the notified figure</span></label>
+            <div class="inp has-suf"><input type="number" id="rc-gvw" min="0" step="0.1" placeholder="0" inputmode="decimal"><span class="suf">t</span></div>
+          </div>
+
+          <div class="field" id="f-limitsrc">
+            <label>Which limit binds</label>
+            <div class="seg" id="limit-seg">
+              <button type="button" data-limit="rc" aria-pressed="true">RC figure</button>
+              <button type="button" data-limit="config" aria-pressed="false">Notified figure</button>
+            </div>
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <label for="unladen">Unladen weight</label>
+              <div class="inp has-suf"><input type="number" id="unladen" min="0" step="0.1" value="10" inputmode="decimal"><span class="suf">t</span></div>
+            </div>
+            <div class="field">
+              <label for="load">Load being put on</label>
+              <div class="inp has-suf"><input type="number" id="load" min="0" step="0.1" value="15" inputmode="decimal"><span class="suf">t</span></div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="laden">Weighbridge laden weight <span class="hint">optional — overrides unladen + load</span></label>
+            <div class="inp has-suf"><input type="number" id="laden" min="0" step="0.01" placeholder="0" inputmode="decimal"><span class="suf">t</span></div>
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <label for="axle-weighed">Heaviest axle group as weighed <span class="hint">optional</span></label>
+              <div class="inp has-suf"><input type="number" id="axle-weighed" min="0" step="0.1" placeholder="0" inputmode="decimal"><span class="suf">t</span></div>
+            </div>
+            <div class="field">
+              <label>That group is</label>
+              <div class="seg" id="axle-seg">
+                <button type="button" data-axle="1.2" aria-pressed="false">2-tyre</button>
+                <button type="button" data-axle="1.3" aria-pressed="true">4-tyre</button>
+                <button type="button" data-axle="2.1" aria-pressed="false">Tandem</button>
+                <button type="button" data-axle="3.1" aria-pressed="false">Tri-axle</button>
+              </div>
+            </div>
+          </div>
+
+          <h3>Penalty settings</h3>
+
+          <div class="field">
+            <label for="tolerance">Gross weight tolerance <span class="hint" id="tolerance-hint">5% under S.O. 3467(E)</span></label>
+            <div class="inp has-suf"><input type="number" id="tolerance" min="0" max="100" step="0.1" value="5" inputmode="decimal"><span class="suf">%</span></div>
+          </div>
+
+          <div class="field" id="f-basis">
+            <label>Excess load measured from <span class="hint">the Act does not settle this</span></label>
+            <div class="seg" id="basis-seg">
+              <button type="button" data-basis="limit" aria-pressed="true">Permissible limit</button>
+              <button type="button" data-basis="tolerance" aria-pressed="false">Tolerance threshold</button>
+            </div>
+          </div>
+
+          <div class="field" id="f-rounding">
+            <label>Part tonnes of excess</label>
+            <div class="seg" id="rounding-seg">
+              <button type="button" data-rounding="ceil" aria-pressed="true">Round up</button>
+              <button type="button" data-rounding="exact" aria-pressed="false">Pro-rata</button>
+            </div>
+          </div>
+
+          <div class="row2" id="f-fines">
+            <div class="field">
+              <label for="base-fine">Base fine <span class="hint">s.194(1)</span></label>
+              <div class="inp has-pre"><span class="pre">₹</span><input type="number" id="base-fine" min="0" step="500" value="20000" inputmode="numeric"></div>
+            </div>
+            <div class="field">
+              <label for="per-tonne">Per tonne of excess</label>
+              <div class="inp has-pre"><span class="pre">₹</span><input type="number" id="per-tonne" min="0" step="100" value="2000" inputmode="numeric"></div>
+            </div>
+          </div>
+
+          <div class="field" id="f-refusal">
+            <label>Driver refused the weighbridge <span class="hint">s.194(2), a separate offence</span></label>
+            <div class="seg" id="refusal-seg">
+              <button type="button" data-refusal="no" aria-pressed="true">No</button>
+              <button type="button" data-refusal="yes" aria-pressed="false">Yes, add ₹40,000</button>
+            </div>
+          </div>
+
+          <div class="field" id="f-mvuc" hidden>
+            <label for="mvuc">Motor vehicle user's charge <span class="hint">the penalty is 25% of this</span></label>
+            <div class="inp has-pre"><span class="pre">₱</span><input type="number" id="mvuc" min="0" step="100" value="0" inputmode="numeric"></div>
+          </div>
+        </section>
+
+        <section class="card sticky">
+          <h2>Result</h2>
+          <div class="result-primary">
+            <div class="k" id="r-key">Remaining safe payload</div>
+            <div class="v" id="r-value">0.00 t</div>
+            <div class="sub" id="r-sub">Enter the axle configuration and the weights.</div>
+          </div>
+
+          <table class="breakdown">
+            <tbody id="r-rows"></tbody>
+          </table>
+
+          <div class="note" id="r-consequence">An overloaded vehicle may not move until the excess is off, and an overloaded vehicle puts its insurance claim at risk. Both cost more than the fine.</div>
+
+          <div class="btnrow">
+            <button class="btn ghost" id="print" type="button">Print / Save PDF</button>
+            <button class="btn ghost" id="reset" type="button">Reset</button>
+          </div>
+        </section>
+      </div>
+
+      <section class="prose">
+        <h2>How it works</h2>
+        <p>Indian axle-weight limits are not in the Motor Vehicles Act. They are notified under <strong>section 58(1)</strong> of the Act, which is why they can change without the Act changing. The current notification is <strong>S.O. 3467(E) dated 16 July 2018</strong>, which superseded S.O. 728(E) of 18 October 1996 and was amended on 6 August 2018.</p>
+        <p>So the permissible gross vehicle weight is built up, not looked up:</p>
+        <ol class="steps">
+          <li>Add up the notified maximum safe axle weight of every axle group on the vehicle — a steering axle on two tyres, a driving axle on four, a tandem bogie, a tri-axle bogie.</li>
+          <li>Add 1 tonne per axle if the vehicle has pneumatic suspension. The notification allows this only on the starred entries: the four-tyre single axle, the tandem and the tri-axle.</li>
+          <li>Apply the ceiling in paragraph 2 of the notification: <code>49 t</code> for a rigid vehicle, <code>55 t</code> for a semi-articulated trailer or truck-trailer. A modular hydraulic trailer has no numeric ceiling.</li>
+          <li>Compare the laden weight against the figure that actually binds. <strong>Section 113(3)</strong> forbids driving a vehicle whose laden weight exceeds <em>the gross vehicle weight specified in the certificate of registration</em>. Section 58(2)(c) puts that figure and the registered axle weights in the RC, and section 58(3) stops the RC showing anything different from the notification. An older RC may still carry a lower rating, so the RC figure wins here when you enter one.</li>
+          <li>Allow the tolerance. The Explanation to the same notification allows a tolerance of up to five per cent in the gross vehicle weight for compliance with section 113(3). Below the threshold there is no offence.</li>
+          <li>Above it, charge <strong>section 194(1)</strong>: the base amount, plus the per-tonne amount on the excess load, plus off-loading charges.</li>
+        </ol>
+        <p>Remaining safe payload is simply <code>permissible GVW − unladen weight − load already on</code>. That is the number worth knowing before the last pallet goes on, not after the weighbridge.</p>
+
+        <h2>The two things that cost more than the fine</h2>
+        <p><strong>The vehicle does not move until the excess is off.</strong> The proviso to section 194(1), inserted in 2019, says the vehicle shall not be allowed to move before the excess load is removed. Section 114(1) lets an authorised officer send the vehicle to a weighbridge within 10 km on the forward route or 20 km of its destination and then, by written order, direct the driver to off-load the excess at his own risk and not to move the vehicle until the laden weight complies. The fine is a known number; the detention, the crane and labour, the second vehicle, the missed delivery slot and the off-loading charges payable under section 194(1) are not, and together they are usually the larger bill.</p>
+        <p><strong>Overloading puts the insurance claim at risk.</strong> Indian insurers routinely repudiate or cut a claim on a vehicle that was overloaded at the time of the loss. Consumer forums have gone both ways: full repudiation has been upheld where the overload had a nexus with the accident, and a reduced “non-standard” settlement — commonly 75% — has been allowed where it did not. The outcome turns on the facts of the loss, so the amount at stake is not the fine but the insured value of the vehicle and the cargo.</p>
+
+        <h2>Philippine mode</h2>
+        <p><strong>Section 6 of Republic Act No. 8794</strong> sets the overloading penalty as an amount equivalent to twenty-five per cent of the motor vehicle user's charge for loading beyond the prescribed gross vehicle weight, and provides that no axle load shall exceed 13,500 kg. The permissible gross vehicle weight by axle configuration is set by Department of Public Works and Highways issuances under the Act's implementing rules, not by the Act. That table is <em>not</em> reproduced here — it could not be sourced to a standard worth putting on a loader's screen — so Philippine mode asks you for the permissible figure from the OR/CR or the current DPWH table instead of guessing one. No tolerance comparable to India's five per cent was found in section 6, so the tolerance starts at zero and is left editable.</p>
+
+        <details class="assumptions">
+          <summary>Assumptions &amp; rates</summary>
+          <p><strong>Maximum safe axle weight</strong> — notified under section 58(1), Motor Vehicles Act 1988 (59 of 1988) by <strong>S.O. 3467(E)</strong> dated 16 July 2018 (F. No. RT-11028/11/2017-MVL), in supersession of S.O. 728(E) dated 18 October 1996:</p>
+          <table class="breakdown">
+            <thead><tr><th>Entry</th><th>Axle type</th><th class="num">Tonnes</th></tr></thead>
+            <tbody>
+              <tr><td>1.1</td><td>Single axle with single tyre</td><td class="num">3.0</td></tr>
+              <tr><td>1.2</td><td>Single axle with two tyres</td><td class="num">7.0</td></tr>
+              <tr><td>1.3</td><td>Single axle with four tyres *</td><td class="num">11.5</td></tr>
+              <tr><td>2.1</td><td>Tandem axle — rigid vehicles, trailers, semi-trailers *</td><td class="num">21</td></tr>
+              <tr><td>2.2</td><td>Tandem axle — puller tractors for hydraulic and pneumatic trailers</td><td class="num">28.5</td></tr>
+              <tr><td>3.1</td><td>Tri-axle — rigid vehicles, trailers, semi-trailers *</td><td class="num">27</td></tr>
+              <tr><td>4</td><td>Axle row, modular hydraulic trailers (9 t per single axle)</td><td class="num">18</td></tr>
+            </tbody>
+          </table>
+          <p>* 1 tonne extra per axle where the vehicle has pneumatic suspension. Entry 1.2 was <strong>7.5 t</strong> as first notified on 16 July 2018 and was substituted to <strong>7.0 t</strong> by a notification dated 6 August 2018; the gazette serial for that amendment comes from a scanned copy and is not treated as sourced here, so the date is cited rather than the serial. The calculator uses 7.0 t and the whole table is editable above.</p>
+          <p><strong>Gross weight ceiling</strong> — paragraph 2 of the same notification: GVW shall not exceed the total permissible safe axle weight and in no case shall exceed 49 t for rigid vehicles, or 55 t for semi-articulated trailers and truck-trailers other than modular hydraulic trailers. Modular hydraulic trailers may carry indivisible goods of any weight subject to regulatory approvals.</p>
+          <p><strong>Tolerance</strong> — Explanation to the same notification: tolerance up to five per cent in the gross vehicle weight for the purpose of compliance with section 113(3).</p>
+          <p><strong>Penalty</strong> — section 194(1), Motor Vehicles Act 1988, as amended by the <strong>Motor Vehicles (Amendment) Act 2019 (Act 32 of 2019), section 78</strong>, in force from 1 September 2019 (S.O. 3110(E) dated 28 August 2019): a fine <strong>of ₹20,000</strong> and an additional amount <strong>of ₹2,000 per tonne of excess load</strong>, together with the liability to pay charges for off-loading the excess load. The 2019 Act also deleted the word “minimum”, so this is the fine rather than a floor. Before 1 September 2019 the figures were ₹2,000 and ₹1,000 per tonne. Section 194(1A), also inserted in 2019, is a separate ₹20,000 offence for a load projecting beyond the permissible limits; section 194(2) is a separate <strong>₹40,000</strong> offence for refusing to stop for weighing or removing the load before weighing, raised from “may extend to three thousand rupees”.</p>
+          <p><strong>Philippines</strong> — section 6, Republic Act No. 8794: twenty-five per cent of the MVUC for loading beyond the prescribed gross vehicle weight; no axle load to exceed 13,500 kg.</p>
+          <p><strong>Not stated here, because it could not be sourced:</strong> any off-loading, crane, labour or godown rate (section 194(1) creates the liability but fixes no amount); detention and demurrage, which are commercial; the compounding amounts notified by each State Government under section 200, which is often what is actually collected at a check-post; any increase notified under <strong>section 199B</strong>, which allows every fine in the Act to be raised by up to 10% a year with effect from 1 April — no notification effecting such an increase could be found, so the 2019 figures are used as they stand; the permissible gross vehicle weight by axle configuration in the Philippines; and any Philippine weight tolerance.</p>
+          <p><strong>Rounding</strong> — “per tonne of excess load” does not say what happens to a part tonne. Rounding up each started tonne is the default here because it is the harsher reading and so the safer planning number; pro-rata is offered alongside it. The same ambiguity applies to the tolerance: the Act does not say whether the excess load is measured from the permissible limit or from the tolerance threshold, so both are offered and the permissible limit is the default.</p>
+        </details>
+
+        <div class="note">Indicative only. This is a planning tool, not legal advice and not a valuation of your exposure. Axle-weight limits are set by notification and change; penalties can be revised annually under section 199B; and what is collected at a check-post is often a State compounding amount notified under section 200 rather than the figure in the Act. Confirm the limits against your vehicle's certificate of registration and the <a href="https://morth.gov.in/">Ministry of Road Transport &amp; Highways</a> notifications, the Act text on <a href="https://www.indiacode.nic.in/">India Code</a>, and for the Philippines the <a href="https://www.officialgazette.gov.ph/">Official Gazette</a> and current <a href="https://www.dpwh.gov.ph/">DPWH</a> issuances, before relying on any number here. Nothing you type leaves this page.</div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <span>Open MSME · open-source tool for MSMEs in India &amp; the Philippines · MIT</span>
+      <span><a href="https://sreenivas-sadhu-prabhakara.github.io/openmsme/">All tools</a></span>
+    </div>
+  </footer>
+
+  <script src="assets/engine.js"></script>
+  <script src="assets/ui.js"></script>
+  <script src="assets/calc.js"></script>
+</body>
+</html>
